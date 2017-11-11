@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 9, 2017 11:44:47 PM by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+
+	<filter-def name="nameFilter" condition="name like :name">
+		<filter-param name="name" type="java.lang.String"/>
+	</filter-def>
+	
+    <class name="com.practice.orm.hibernate.simpleprogrammer.model.User" table="USERS">
+    
+    	<!-- <cache usage="read-write"/> -->
+    	
+        <id name="id" type="int">
+            <column name="ID" />
+            <generator class="identity" />
+        </id>
+        <property name="name" type="java.lang.String">
+            <column name="NAME" />
+        </property>
+        <property name="primaryId" type="long">
+            <column name="PRIMARYID" />
+        </property>
+        <property name="surogateId" type="short">
+            <column name="SUROGATEID" />
+        </property>
+        <property name="amount" type="float">
+            <column name="AMOUNT" />
+        </property>
+        <property name="paid" type="double">
+            <column name="PAID" />
+        </property>
+        <property name="active" type="char">
+            <column name="ACTIVE" />
+        </property>
+        <property name="proteinTaker" type="boolean">
+            <column name="PROTEINTAKER" />
+        </property>
+       
+       <!-- Protein Data Mapping -->
+       <!-- class is optional -->
+		<!-- <component name="proteinData"
+			class="com.practice.orm.hibernate.simpleprogrammer.model.ProteinData">
+			<property name="total" type="int">
+				<column name="TOTAL" />
+			</property>
+			<property name="goal" type="int">
+				<column name="GOAL" />
+			</property>
+		</component> -->
+		
+		<!-- One to One -->
+		<!-- <one-to-one name="proteinData" 
+			class="com.practice.orm.hibernate.simpleprogrammer.model.ProteinData"
+			cascade="save-update"/> -->
+			
+		<!-- One to One another way -->
+		<many-to-one name="proteinData"
+			class="com.practice.orm.hibernate.simpleprogrammer.model.ProteinData"
+			column="PROTEIN_DATA_ID" cascade="save-update" unique="true" />
+		
+		<!-- User History Mapping -->
+		<!-- One to Many mapping -->
+		<!-- <set name="userHistory" table="USER_HISTORY">
+			<key column="ID" /> We are using ID from User Foreign Key
+			<composite-element
+				class="com.practice.orm.hibernate.simpleprogrammer.model.UserHistory">
+				<property name="entryTime" type="date" column="ENTRY_TIME" />
+				<property name="entry" type="string" column="ENTRY" />
+			</composite-element>
+		</set> -->
+		<!-- <list name="userHistory" table="USER_HISTORY">
+			<key column="ID" /> We are using ID from User Foreign Key
+			<list-index column="POSITION"/> Required for List: We could have duplicate
+			<composite-element
+				class="com.practice.orm.hibernate.simpleprogrammer.model.UserHistory">
+				<property name="entryTime" type="date" column="ENTRY_TIME" />
+				<property name="entry" type="string" column="ENTRY" />
+			</composite-element>
+		</list> -->
+		<!-- <map name="userHistory" table="USER_HISTORY">
+			<key column="ID" /> We are using ID from User Foreign Key
+			<map-key type="string" column="ENTRY_IDENTIFIER"/> Map Key 
+			<composite-element
+				class="com.practice.orm.hibernate.simpleprogrammer.model.UserHistory">
+				<property name="entryTime" type="date" column="ENTRY_TIME" />
+				<property name="entry" type="string" column="ENTRY" />
+			</composite-element>
+		</map> -->
+		<!-- For Collection interface -->
+		<!-- <idbag name="userHistory" table="USER_HISTORY">
+			<collection-id type="int" column="ID">
+				<generator class="increment"></generator>
+			</collection-id>
+			<key column="USER_ID" /> We are using ID from User Foreign Key
+			<composite-element
+				class="com.practice.orm.hibernate.simpleprogrammer.model.UserHistory">
+				<property name="entryTime" type="date" column="ENTRY_TIME" />
+				<property name="entry" type="string" column="ENTRY" />
+			</composite-element>
+		</idbag> -->
+		
+		<!-- One to Many Entity : inverse required for Bi-Directional; cascade is required to tell whenever user is going to save save user history as well-->
+		<list name="userHistory"  inverse="true" cascade="save-update">
+			
+			<!-- <cache usage="read-write"/> -->
+					
+			<key column="USER_ID" /> <!-- We are using ID from User Foreign Key -->
+			<list-index column="POSITION"/>
+			<one-to-many class="com.practice.orm.hibernate.simpleprogrammer.model.UserHistory" />
+		</list>
+			
+			
+		<!-- User Goal Mapping -->
+		<!-- Join Table: One to One -->
+		<!-- <join table="USER_GOALALERT" optional="true">
+			<key column="USER_ID"></key>
+			<many-to-one name="goalAlert"
+			column="GOAL_ALERT_ID"
+			not-null="true"
+			unique="true"
+			cascade="save-update"
+			/>
+		</join> -->
+		
+		<!-- Join Table: One to Many -->
+		<set name="goalAlerts" table="USER_GOALALERT" cascade="save-update">
+			<key column="USER_ID"></key>
+			<many-to-many class="com.practice.orm.hibernate.simpleprogrammer.model.GoalAlert"
+				column="GOAL_ALERT_ID"></many-to-many>
+		</set>
+		
+		<filter name="nameFilter"></filter>
+		
+    </class>
+</hibernate-mapping>

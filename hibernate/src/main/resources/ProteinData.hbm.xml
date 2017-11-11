@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 5, 2017 5:43:22 PM by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="com.practice.orm.hibernate.simpleprogrammer.model.ProteinData" table="PROTEIN_DATA">
+       <!--  <id name="id" type="int">
+        	This is the ID; will be picked from ID of property user
+            <column name="PROTEIN_ID" />
+            <generator class="foreign">
+            	<param name="property">user</param>
+            </generator>
+        </id> -->
+        <!-- One to One another way -->
+         <id name="id" type="int">
+        	<!-- This is the ID; will be picked from ID of property user -->
+            <column name="PROTEIN_ID" />
+            <generator class="increment">
+            </generator>
+        </id>
+        
+        <!-- constrained true will make sure Protein Data should have user -->
+        <!-- <one-to-one name="user" class="com.practice.orm.hibernate.simpleprogrammer.model.User"
+        	constrained="true"/> -->
+        
+         <!-- One to One another way -->
+         <one-to-one name="user" class="com.practice.orm.hibernate.simpleprogrammer.model.User"
+        	property-ref="proteinData"/>
+        	
+        <property name="total" type="int">
+            <column name="TOTAL" />
+        </property>
+        <property name="goal" type="int">
+            <column name="GOAL" />
+        </property>
+        
+    </class>
+</hibernate-mapping>
