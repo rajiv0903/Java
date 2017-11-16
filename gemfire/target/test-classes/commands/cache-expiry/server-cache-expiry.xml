@@ -1,0 +1,84 @@
+<cache xmlns="http://schema.pivotal.io/gemfire/cache" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schema.pivotal.io/gemfire/cache http://schema.pivotal.io/gemfire/cache/cache-8.1.xsd"
+	version="8.1">
+
+	<pdx read-serialized="true">
+		<pdx-serializer>
+			<class-name>org.apache.geode.pdx.ReflectionBasedAutoSerializer</class-name>
+			<!-- <parameter name="classes"> <string>com.company.domain.DomainObject,com</string> 
+				</parameter> -->
+		</pdx-serializer>
+	</pdx>
+
+	<!--REPLICATE:  With entry-idle-time set to 30 seconds -->
+	<!-- org.apache.geode.cache.RegionShortcut -->
+	<region name="Customer">
+		<region-attributes refid="REPLICATE" scope="distributed-ack"
+			concurrency-checks-enabled="true" statistics-enabled="true" >
+			<entry-idle-time>
+				<expiration-attributes timeout="30" action="destroy"></expiration-attributes>
+			</entry-idle-time>
+		</region-attributes>
+	</region>
+
+	<!-- REPLICATE: With entry-idle-time set to Custom -->
+	<!-- org.apache.geode.cache.RegionShortcut -->
+<!-- 	<region name="Customer">
+		<region-attributes refid="REPLICATE" scope="distributed-ack"
+			concurrency-checks-enabled="true" statistics-enabled="true">
+			<entry-idle-time>
+				<expiration-attributes timeout="0">
+					<custom-expiry>
+						<class-name>com.practice.nosql.gemfire.expiry.MyCustomExpiry</class-name>
+					</custom-expiry>
+				</expiration-attributes>
+			</entry-idle-time>
+		</region-attributes>
+	</region> -->
+	
+	<!-- REPLICATE: lru-entry-count - Least Recently Used Entries Max 3-->
+	<!-- org.apache.geode.cache.RegionShortcut -->
+	<!-- <region name="Customer">
+		<region-attributes refid="REPLICATE" scope="distributed-ack"
+			concurrency-checks-enabled="true" statistics-enabled="true">
+			<eviction-attributes>
+				<lru-entry-count maximum="3" action="local-destroy"/>
+			</eviction-attributes>
+		</region-attributes>
+	</region> -->
+	
+	<!-- org.apache.geode.cache.RegionShortcut -->
+	<!-- <region name="Customer">
+		<region-attributes refid="PARTITION">
+			<partition-attributes local-max-memory="512"></partition-attributes>
+			<eviction-attributes>
+				<lru-memory-size action="local-destroy"></lru-memory-size>
+			</eviction-attributes>
+		</region-attributes>
+	</region> -->
+	
+	<!-- org.apache.geode.cache.RegionShortcut -->
+	<!-- PARTITION_REDUNDANT: With Resource Manager - Make sure no GC -->
+	 <region name="Customer">
+		<region-attributes refid="PARTITION_REDUNDANT">
+			<eviction-attributes>
+				<lru-memory-size action="local-destroy"></lru-memory-size>
+			</eviction-attributes>
+		</region-attributes>
+	</region> 
+
+	<region name="BookOrder">
+		<region-attributes refid="REPLICATE" />
+	</region>
+
+	<region name="BookOrderItem">
+		<region-attributes refid="REPLICATE" />
+	</region>
+
+	<!-- Set Up CMSInitiatingOccupancyFraction = critical-heap-percentage - 10 so that 
+		GC Started  
+		Worked with PARTITION_REDUNDANT
+	-->
+	<resource-manager eviction-heap-percentage="85" critical-heap-percentage="70"/>
+
+</cache>

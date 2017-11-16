@@ -1,0 +1,70 @@
+<cache xmlns="http://schema.pivotal.io/gemfire/cache" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schema.pivotal.io/gemfire/cache http://schema.pivotal.io/gemfire/cache/cache-8.1.xsd"
+	version="8.1">
+
+	<pdx read-serialized="true">
+		<pdx-serializer>
+			<class-name>org.apache.geode.pdx.ReflectionBasedAutoSerializer</class-name>
+			<!-- <parameter name="classes"> <string>com.company.domain.DomainObject,com</string> 
+				</parameter> -->
+		</pdx-serializer>
+	</pdx>
+
+	<!-- org.apache.geode.cache.RegionShortcut -->
+	<!-- <region name="Customer"> <region-attributes refid="PARTITION"> <partition-attributes 
+		redundant-copies="1" recovery-delay="5000" total-num-buckets="113"></partition-attributes> 
+		</region-attributes> <index name="PrimIndex"> <primary-key field="intValue" 
+		/> </index> </region> -->
+	
+	<!-- org.apache.geode.cache.RegionShortcut -->
+	<!-- <region name="Customer">
+		<region-attributes refid="PARTITION">
+			<partition-attributes redundant-copies="1"
+				recovery-delay="5000" total-num-buckets="113"></partition-attributes>
+		</region-attributes>
+		<index name="PrimIndex">
+			<primary-key field="intValue" />
+		</index>
+		<index name="KeyIndex" from-clause="/Customer" expression="customerNumber"
+			key-index="true" />
+		<index name="firstNameIndex" from-clause="/Customer" expression="firstName"
+			type="hash" />
+		<index name="ageIndex" from-clause="/Customer" expression="age" /> 
+	</region> -->
+	
+	<!-- org.apache.geode.cache.RegionShortcut -->
+	<region name="Customer">
+		<region-attributes refid="PARTITION">
+			<partition-attributes redundant-copies="1"
+				recovery-delay="5000" total-num-buckets="5"></partition-attributes>
+		</region-attributes>
+	</region>
+	
+	<!-- org.apache.geode.cache.RegionShortcut -->
+	<region name="BookOrder">
+		<region-attributes refid="PARTITION">
+			<partition-attributes redundant-copies="1"
+				recovery-delay="5000" total-num-buckets="5">
+				   <!-- colocated-with="Customer"
+					<partition-resolver>
+						<class-name>com.practice.nosql.gemfire.partitioning.CustomerPartitionResolver</class-name>
+					</partition-resolver> --> 
+				</partition-attributes>
+		</region-attributes>
+	</region>
+	
+	<!-- org.apache.geode.cache.RegionShortcut -->
+	<region name="BookOrderItem">
+		<region-attributes refid="REPLICATE"/>
+	</region>
+
+	<!-- org.apache.geode.cache.RegionShortcut -->
+	<!-- <region name="Product">
+		<region-attributes refid="REPLICATE" scope="global">
+		</region-attributes>
+		<index name="PrimIndex">
+			<primary-key field="intValue" />
+		</index>
+	</region> -->
+
+</cache>

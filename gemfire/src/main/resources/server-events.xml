@@ -1,0 +1,52 @@
+<cache xmlns="http://schema.pivotal.io/gemfire/cache" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schema.pivotal.io/gemfire/cache http://schema.pivotal.io/gemfire/cache/cache-8.1.xsd"
+	version="8.1">
+
+	<async-event-queue id="sampleQueue" persistent="true"
+		disk-store-name="exampleStore">
+		<async-event-listener>
+			<class-name>com.practice.nosql.gemfire.events.server.listeners.MyAsyncEventListener</class-name>
+		</async-event-listener>
+	</async-event-queue>
+
+	<pdx read-serialized="true">
+		<pdx-serializer>
+			<class-name>org.apache.geode.pdx.ReflectionBasedAutoSerializer</class-name>
+			<!-- <parameter name="classes"> <string>com.company.domain.DomainObject,com</string> 
+				</parameter> -->
+		</pdx-serializer>
+	</pdx>
+
+
+
+	<!-- org.apache.geode.cache.RegionShortcut -->
+	<region name="BookMaster">
+		<!-- <region-attributes refid="REPLICATE" async-event-queue-ids="sampleQueue"> -->
+		<region-attributes refid="REPLICATE">
+			<cache-loader>
+				<class-name>com.practice.nosql.gemfire.events.server.listeners.BookMasterCacheLoader</class-name>
+				<parameter name="driverClassName">
+					<string>com.mysql.jdbc.Driver</string>
+				</parameter>
+				<parameter name="url">
+					<string>jdbc:mysql://localhost:3306/gemfire_demos</string>
+				</parameter>
+				<parameter name="userName">
+					<string>root</string>
+				</parameter>
+				<parameter name="password">
+					<string>password</string>
+				</parameter>
+			</cache-loader>
+			<cache-writer>
+				<class-name>com.practice.nosql.gemfire.events.server.listeners.BookMasterCacheWriter</class-name>
+			</cache-writer>
+			<cache-listener>
+				<class-name>com.practice.nosql.gemfire.events.server.listeners.BookMasterAuditCacheListener</class-name>
+			</cache-listener>
+		</region-attributes>
+	</region>
+
+
+
+</cache>

@@ -1,0 +1,132 @@
+###################################################################################################
+Start a Locator:
+-------------------------------------------------------------------------------------------------
+start locator --name=locator1 --dir="E:\workspace\gemfire\service\locators\locator1"
+-------------------------------------------------------------------------------------------------
+Optional:
+start locator 
+	--name=locator1 
+	--port=41111
+	--dir="E:\workspace\gemfire\service\locators\locator1"
+	--properties-file="E:\workspace\gemfire\service\locators\gemfire.properties"
+	--initial-heap=50m
+	--max-heap=50m
+-------------------------------------------------------------------------------------------------	
+Optional (Configure Cluster to Use Locators):
+start locator 
+	--name=locator1 
+	--port=41111
+	--mcast-port=0
+	--dir="E:\workspace\gemfire\service\locators\locator1"
+	--properties-file="E:\workspace\gemfire\service\locators\gemfire.properties"
+	--initial-heap=50m
+	--max-heap=50m
+
+###################################################################################################
+Start a Server:
+-------------------------------------------------------------------------------------------------
+start server --name=server1 --dir="E:\workspace\gemfire\service\servers\server1"
+-------------------------------------------------------------------------------------------------
+Start a Server Any Port:
+start server --name=server2 --dir="E:\workspace\gemfire\service\servers\server2" --server-port=0
+-------------------------------------------------------------------------------------------------
+Optional:
+start server 
+	--name=server2
+	--locators=host3[41111]
+	--server-port=41122 [Set 0 to choose dynamically]
+	--dir="E:\workspace\gemfire\service\servers\server2"
+	--properties-file="E:\workspace\gemfire\service\servers\gemfire.properties"
+	--initial-heap=50m
+	--max-heap=50m
+-------------------------------------------------------------------------------------------------
+Optional:
+start server 
+	--name=server2
+	--locators=host3[41111]
+	--server-port=41122 [Set 0 to choose dynamically]
+	--dir="E:\workspace\gemfire\service\servers\server2"
+	--properties-file="E:\workspace\gemfire\service\servers\gemfire.properties"
+	--initial-heap=50m
+	--max-heap=50m
+	
+-------------------------------------------------------------------------------------------------	
+Optional (Configure Cluster to Use Cache):
+start server 
+	--name=locator1 
+	--port=41111
+	--mcast-port=0
+	--cache-xml-file="E:\workspace\gemfire\service\servers\serverCache.xml"
+	--dir="E:\workspace\gemfire\service\servers\servers2"
+	--properties-file="E:\workspace\gemfire\service\locators\gemfire.properties"
+	--initial-heap=50m
+	--max-heap=50m
+	
+Content Of serverCache.xml:
+<cache>
+	<region name="People" refid="REPLICATE"/>
+</cache>
+
+refid: REPLICATE, PARTITION
+###################################################################################################
+Create a Region:
+create region --name=People --type=REPLICATE
+###################################################################################################
+Put Data on Region:
+put --key=1 --value="Rajiv Chaudhuri" --region=People
+put --key=2 --value="Mahika Chaudhuri" --region=People
+###################################################################################################
+List Regions:
+list regions
+-------------------------------------------------------------------------------------------------
+Optional:
+show metrics --region=People
+	--member=server1
+	--categories=partition
+###################################################################################################
+Query the Region:
+query --query="select * from /People"
+
+Optional: Query Debugger
+-------------------------------------------------------------------------------------------------
+<trace>select * from /Customer
+
+###################################################################################################
+Describe Region To See Replication:
+describe region --name=People
+#######################################################################
+Stop Server:
+stop server --name=server1 --dir="E:\workspace\gemfire\service\servers\server1"
+###################################################################################################
+Exit and Connect:
+connect
+-------------------------------------------------------------------------------------------------
+Optional:
+connect --locator=localhost[41111]
+###################################################################################################
+Shutdown: (You will lose all data)
+shutdown --include-locators=true
+###################################################################################################
+Indexes:
+Range: When you have where clause
+Hash: Supports equality queries only 
+Key: Which number you are looking for at Region
+
+<region name="Customer">
+	<region-attributes refid="PARTITION">
+		<partition-attributes redundant-copies="1"
+			recovery-delay="5000" total-num-buckets="113"></partition-attributes>
+	</region-attributes>
+	<index name="PrimIndex">
+		<primary-key field="intValue" />
+	</index>
+	<index name="KeyIndex" from-clause="/Customer" expression="customerNumber" key-index="true"/>
+	<index name="firstNameIndex" from-clause="/Customer" expression="firstName" type="hash"/>
+	<index name="ageIndex" from-clause="/Customer" expression="age"/> <!--Default to Range like age > < or range-->
+</region>
+
+Supply Index:
+<hint 'firstNameIndex'>select * from /Customer where firstName= $1
+###################################################################################################
+
+
