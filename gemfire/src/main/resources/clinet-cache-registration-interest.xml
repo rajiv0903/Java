@@ -1,0 +1,17 @@
+<client-cache xmlns="http://schema.pivotal.io/gemfire/cache"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schema.pivotal.io/gemfire/cache http://schema.pivotal.io/gemfire/cache/cache-8.1.xsd"
+	version="8.1">
+
+	<pool name="client-pool" subscription-enabled="true">
+		<locator port="41111" host="localhost"/>
+	</pool>
+	
+	<!-- PROXY, LOCAL, CACHING_PROXY
+	org.apache.geode.cache.client.ClientRegionShortcut
+	 -->
+	<region name="Customer" refid="CACHING_PROXY">
+		<region-attributes pool-name="client-pool"></region-attributes>
+	</region>
+	
+</client-cache>

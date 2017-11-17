@@ -78,7 +78,7 @@
 	
 
 	<build>
-		<finalName>gemfire</finalName>
+		<!-- <finalName>gemfire-demo</finalName> -->
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
