@@ -1,0 +1,28 @@
+<client-cache xmlns="http://schema.pivotal.io/gemfire/cache"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schema.pivotal.io/gemfire/cache http://schema.pivotal.io/gemfire/cache/cache-8.1.xsd"
+	version="8.1">
+
+	<pool name="client" subscription-enabled="true">
+		<locator port="41111" host="localhost" />
+	</pool>
+	
+	<!-- Ask Server to return domain not the PdxInstance -->
+	<pdx read-serialized="false">
+		<pdx-serializer>
+			<class-name>org.apache.geode.pdx.ReflectionBasedAutoSerializer</class-name>
+			<parameter name="classes">
+				<string>com.practice.nosql.gemfire.modelpdx.*</string>
+			</parameter>
+			<parameter name="check-portability">
+				<string>true</string>
+			</parameter>
+		</pdx-serializer>
+	</pdx>
+
+	<!-- PROXY, LOCAL, CACHING_PROXY org.apache.geode.cache.client.ClientRegionShortcut -->
+	<region name="Customer">
+		<region-attributes refid="CACHING_PROXY"></region-attributes>
+	</region>
+
+</client-cache>
