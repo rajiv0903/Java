@@ -8,10 +8,11 @@
 		<filter-param name="name" type="java.lang.String"/>
 	</filter-def>
 	
-    <class name="com.practice.orm.hibernate.simpleprogrammer.model.User" table="USERS">
+    <class name="com.practice.orm.hibernate.simpleprogrammer.model.User" table="USERS"
+     dynamic-update="true">
     
-    	<!-- <cache usage="read-write"/> -->
-    	
+    	<!-- Cache -->
+    	<cache usage="read-write"/>
         <id name="id" type="int">
             <column name="ID" />
             <generator class="identity" />
@@ -103,9 +104,8 @@
 		
 		<!-- One to Many Entity : inverse required for Bi-Directional; cascade is required to tell whenever user is going to save save user history as well-->
 		<list name="userHistory"  inverse="true" cascade="save-update">
-			
-			<!-- <cache usage="read-write"/> -->
-					
+			<!-- Cache -->
+			<cache usage="read-write"/>
 			<key column="USER_ID" /> <!-- We are using ID from User Foreign Key -->
 			<list-index column="POSITION"/>
 			<one-to-many class="com.practice.orm.hibernate.simpleprogrammer.model.UserHistory" />

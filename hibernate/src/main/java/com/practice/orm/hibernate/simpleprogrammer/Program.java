@@ -22,10 +22,12 @@ public class Program {
 		System.out.println("Hello World!");
 
 		populateSampleData();
-		
+
+	
 		//Querying
 		Session session = HibernateUtilities.getSessionFactory().openSession();
 		session.beginTransaction();
+		
 		
 		/*Query query = session.createQuery("from User");
 		List<User> users = query.list();
@@ -152,21 +154,29 @@ public class Program {
 		*/
 		
 		/**Native SQL**/
-		/*Query query = session.createSQLQuery("select * from users").addEntity(User.class);
+		Query query = session.createSQLQuery("select * from users").addEntity(User.class);
 		List<User> users = query.list();
 		for (User user : users) {
 			System.out.println(user.getName());
-		}*/
+//			UserHistory history = new UserHistory(new Date(), "My-"+user.getName());
+//			history.setUser(user);
+//			session.save(history);
+			user.addHistory(new UserHistory(new Date(), "Second My-"+user.getName()));
+		}
+		User u = session.load(User.class, 1);
+		System.out.println(u.getName());
+		u.setAmount(200f);
+		session.saveOrUpdate(u);
+		
 		
 		/**Filter Query**/
-		
-		session.enableFilter("nameFilter").setParameter("name", "R%");
-		
+		/*session.enableFilter("nameFilter").setParameter("name", "R%");	
 		Query query = session.createQuery("from User");
 		List<User> users = query.list();
 		for(User user: users) {
 			System.out.println(user.getName());
-		}
+		}*/
+		
 		
 		session.getTransaction().commit();
 		session.close();

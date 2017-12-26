@@ -5,8 +5,7 @@
 <hibernate-mapping>
     <class name="com.practice.orm.hibernate.simpleprogrammer.model.UserHistory" table="USER_HISTORY">
     
-    	<!-- <cache usage="read-only"/> -->
-    	
+    	<cache usage="read-only"/>
         <id name="id" type="int">
             <column name="ID" />
             <generator class="increment" />
