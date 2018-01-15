@@ -1,0 +1,7 @@
+package com.practice.java.designpattern.headfirst.combining.ducks;
+
+public class DuckCall implements Quackable {
+	public void quack() {
+		System.out.println("Kwak");
+	}
+}
